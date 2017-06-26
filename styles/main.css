@@ -8,6 +8,7 @@ body {
   color: white;
   min-height: 100%;
 }
+
 body.landing{
   background: rgb(58,23,63);
 }
@@ -16,6 +17,7 @@ body.landing{
   padding: 0.5rem;
   background: rgb(101,18,95);
 }
+
 .navbar .logo {
   position: relative;
   left: 2rem;
