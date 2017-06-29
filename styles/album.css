@@ -9,13 +9,13 @@ body.album{
 .album-cover-art {
   position: relative;
   left: 20%;
-  margin-top:1rem;
+  margin-top: 1rem;
   width: 60%;
   /* why was there a left margin set but not a right margin? HINT look @ width */
 }
 
 .album-view-details {
-  position:relative;
+  position: relative;
   top: 1.5rem;
   padding:1rem;
 }
@@ -60,7 +60,7 @@ body.album{
   width: 5%;
 }
 
-@media (max-width:640px) and (min-width:320px) {
+@media (max-width: 640px) and (min-width: 320px) {
   .album-view-details {
     text-align: center;
   }
@@ -70,7 +70,7 @@ body.album{
   }
 }
 
-@media (max-width:1024px) and (min-width 320px) {
+@media (max-width: 1024px) and (min-width: 320px) {
   .album-view-song-list {
     position: relative;
     top: 1rem;
