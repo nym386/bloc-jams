@@ -29,6 +29,21 @@ var albumMarconi = {
   ]
 };
 
+var albumSatellite = {
+  title: 'The Dog',
+  artist: 'Satellite Doying',
+  label: 'Brindle',
+  year: '2011',
+  albumArtUrl:'assets/images/album_covers/05.png',
+  songs: [
+    { title: "Bark Bark", duration: "0:01"},
+    { title: "Yawn", duration: "0:05"},
+    { title: "Snoozin", duration: "100:21"},
+    { title: "Sad Dog Eyes", duration: "1:14"},
+    { title: "Whine", duration: "0:03"},
+  ]
+};
+
 var createSongRow = function(songNumber, songName, songLength){
   var template =
         '<tr class="album-view-song-item">'
@@ -63,3 +78,20 @@ var setCurrentAlbum = function(album) {
 window.onload = function(){
   setCurrentAlbum(albumPicasso);
 } ;
+
+//select element
+var albumCover = document.getElementsByClassName("album-cover-art")[0];
+var count = 0;
+//add eventlistener to the element
+albumCover.addEventListener('click', function(){
+  if (count === 0){
+    setCurrentAlbum(albumMarconi);
+    count ++;
+  }else if (count === 1){
+    setCurrentAlbum(albumSatellite);
+    count ++;
+  }else {
+    setCurrentAlbum(albumPicasso)
+    count = 0;
+  }
+});
