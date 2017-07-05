@@ -56,12 +56,13 @@ var createSongRow = function(songNumber, songName, songLength){
       return template;
 }
 
+var albumTitle = document.getElementsByClassName('album-view-title')[0];
+var albumArtist = document.getElementsByClassName('album-view-artist')[0];
+var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
+var albumImage = document.getElementsByClassName('album-cover-art')[0];
+var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
+
 var setCurrentAlbum = function(album) {
-  var albumTitle = document.getElementsByClassName('album-view-title')[0];
-  var albumArtist = document.getElementsByClassName('album-view-artist')[0];
-  var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
-  var albumImage = document.getElementsByClassName('album-cover-art')[0];
-  var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
 
   albumTitle.firstChild.nodeValue = album.title;
   albumArtist.firstChild.nodeValue = album.artist;
@@ -75,23 +76,26 @@ var setCurrentAlbum = function(album) {
   }
 };
 
+var toggleImage = function(){
+  //select element
+  var count = 0;
+  //add eventlistener to the element
+  albumImage.addEventListener('click', function(){
+    if (count === 0){
+      setCurrentAlbum(albumMarconi);
+      count ++;
+    }else if (count === 1){
+      setCurrentAlbum(albumSatellite);
+      count ++;
+    }else {
+      setCurrentAlbum(albumPicasso)
+      count = 0;
+    }
+  });
+}
+
+
 window.onload = function(){
   setCurrentAlbum(albumPicasso);
+  toggleImage();
 } ;
-
-//select element
-var albumCover = document.getElementsByClassName("album-cover-art")[0];
-var count = 0;
-//add eventlistener to the element
-albumCover.addEventListener('click', function(){
-  if (count === 0){
-    setCurrentAlbum(albumMarconi);
-    count ++;
-  }else if (count === 1){
-    setCurrentAlbum(albumSatellite);
-    count ++;
-  }else {
-    setCurrentAlbum(albumPicasso)
-    count = 0;
-  }
-});
