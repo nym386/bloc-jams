@@ -40,9 +40,14 @@ var createSongRow = function(songNumber, songName, songLength){
 
       return template;
 }
-// Album button templatevar
+// Album button template vars
 var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
+var pauseButtonTemplate = '<a class="album-song-button"><span class="ion-pause"></span></a>';
 
+//song state var
+var currentlyPlayingSong = null;
+
+//element vars
 var albumTitle = document.getElementsByClassName('album-view-title')[0];
 var albumArtist = document.getElementsByClassName('album-view-artist')[0];
 var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
@@ -65,19 +70,103 @@ var setCurrentAlbum = function(album) {
   }
 };
 
+//function for finding a parent by class name
+var findParentByClassName = function(element, parentClassName,){
+  //establish a variable to store the parentElement
+  var parent = element.parentElement;
+  //a console log to check what is being identified as a parent
+  //console.log(parent.className + " is parent");
+  if(parent.className === parentClassName){
+    //should return parent object if it has the same name as the one we are looking for
+    return parent;
+  }else{
+    //recursively call the function again to find the next parent up the chain
+    return findParentByClassName(parent, parentClassName,);
+  }
+};
+
+//function that returns Song Item
+var getSongItem = function(element){
+  switch (element.className) {
+    case 'album-song-button' :
+    case 'ion-play' :
+    case 'ion-pause' :
+      return findParentByClassName(element, 'song-item-number');
+      break;
+    case 'album-view-song-item' :
+      return element.querySelector('.song-item-number');
+      break;
+    case 'song-item-title' :
+    case 'song-item-duration':
+      return findParentByClassName(element, 'album-view-song-item').querySelector('.song-item-number');
+      break;
+    case 'song-item-number' :
+      return element;
+      break
+    default :
+      return;
+      break;
+
+  }
+};
+// a function defining what happenes when yo click a target in the player
+var clickHandler = function (targetElement){
+  //store the song=item-number of the clicked row in a variable
+  var songItem = getSongItem(targetElement);
+
+  if (currentlyPlayingSong === null){
+    //change the innerHTML from song number to a puase button (because you just started the song)
+    songItem.innerHTML = pauseButtonTemplate;
+    //set the variable currently playing song to the clicked item number
+    currentlyPlayingSong = songItem.getAttribute('data-song-number');
+  } else if (currentlyPlayingSong === songItem.getAttribute('data-song-number')){
+    //change the innerHTML from a puase button to a play button (because you just stopped the song)
+    songItem.innerHTML = playButtonTemplate;
+    //change the currently playing song to null because there is no music playing
+    currentlyPlayingSong = null;
+  } else if (currentlyPlayingSong !== songItem.getAttribute('data-song-number')){
+    //since the item you clicked is not playing and another item is, we need to work with two items
+    //create a variable to store the element from the song that was previously playing by using currently playing song
+    var currentlyPlayingSongElement = document.querySelector('[data-song-number="' + currentlyPlayingSong + '"]')
+    //change innerHTML of that song BACK to a number since it is no longer playing
+    currentlyPlayingSongElement.innerHTML = currentlyPlayingSongElement.getAttribute('data-song-number');
+    //change the clicked element to puase since you started the song & set currently playing song
+    songItem.innerHTML = pauseButtonTemplate;
+    currentlyPlayingSong = songItem.getAttribute('data-song-number');
+  }
+};
+
 window.onload = function(){
   setCurrentAlbum(albumPicasso);
-
+/*
   albumSongList.addEventListener('mouseover', function (event){
-    //this is the only section I'm a little confused about. Isn't every parent === album-view-song-item?
-    if (event.target.parentElement.className === 'album-view-song-item'){
-      event.target.parentElement.querySelector('.song-item-number').innerHTML = playButtonTemplate;
+
+    if (event.target.parentElement.className === 'album-view-song-item' && getSongItem(event.target).getAttribute('data-song-number') !== currentlyPlayingSong){
+        event.target.parentElement.querySelector('.song-item-number').innerHTML = playButtonTemplate;
     }
   });
+*/
+  albumSongList.addEventListener('mouseover', function(event) {
+      if (event.target.parentElement.className === 'album-view-song-item') {
+              var songItem = getSongItem(event.target);
+              if (songItem.getAttribute('data-song-number') !== currentlyPlayingSong) {
+                  songItem.innerHTML = playButtonTemplate;
+              }
+      }
+  });
+
 
   for (var i = 0; i < songRows.length; i++) {
     songRows[i].addEventListener('mouseleave', function(event){
-      this.children[0].innerHTML = this.children[0].getAttribute('data-song-number');
+      var songItem = getSongItem(event.target);
+      var songItemNumber = songItem.getAttribute('data-song-number');
+      if (songItemNumber !== currentlyPlayingSong){
+        songItem.innerHTML = songItemNumber;
+      }
     });
+
+    songRows[i].addEventListener('click', function(event){
+      clickHandler(event.target);
+    })
   }
 }
