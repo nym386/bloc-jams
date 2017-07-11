@@ -70,18 +70,29 @@ var setCurrentAlbum = function(album) {
   }
 };
 
+
 //function for finding a parent by class name
-var findParentByClassName = function(element, parentClassName,){
-  //establish a variable to store the parentElement
-  var parent = element.parentElement;
-  //a console log to check what is being identified as a parent
-  //console.log(parent.className + " is parent");
-  if(parent.className === parentClassName){
-    //should return parent object if it has the same name as the one we are looking for
-    return parent;
+var findParentByClassName = function(element, parentClassName){
+  //create a function within the function to run the recursion so that we can do one check outside of the recursive loop
+  var recursiveFind = function(element, parentClassName){
+    if (element.parentElement === null){return console.log("No parent found with that class name")}
+    //establish a variable to store the parentElement
+    var parent = element.parentElement;
+    //a console log to check what is being identified as a parent
+    //console.log(parent.className + " is parent");
+    if(parent.className === parentClassName){
+      //should return parent object if it has the same name as the one we are looking for
+      return parent;
+    }else{
+      //recursively call the function again to find the next parent up the chain
+      return recursiveFind(parent, parentClassName,);
+    }
+  };
+  //checks to see if a parent exists: HTML has no parents :(
+  if (element.tagName === "HTML"){
+    console.log("No parent found");
   }else{
-    //recursively call the function again to find the next parent up the chain
-    return findParentByClassName(parent, parentClassName,);
+    return recursiveFind(element, parentClassName);
   }
 };
 
@@ -138,7 +149,7 @@ var clickHandler = function (targetElement){
 
 window.onload = function(){
   setCurrentAlbum(albumPicasso);
-/*
+/* my function.  The example function is uncommented below while waiting for an update from Jacob
   albumSongList.addEventListener('mouseover', function (event){
 
     if (event.target.parentElement.className === 'album-view-song-item' && getSongItem(event.target).getAttribute('data-song-number') !== currentlyPlayingSong){
@@ -157,7 +168,7 @@ window.onload = function(){
 
 
   for (var i = 0; i < songRows.length; i++) {
-    songRows[i].addEventListener('mouseleave', function(event){
+    songRows[i].addEventListener('mouseleave', function(event) {
       var songItem = getSongItem(event.target);
       var songItemNumber = songItem.getAttribute('data-song-number');
       if (songItemNumber !== currentlyPlayingSong){
@@ -165,8 +176,8 @@ window.onload = function(){
       }
     });
 
-    songRows[i].addEventListener('click', function(event){
+    songRows[i].addEventListener('click', function(event) {
       clickHandler(event.target);
-    })
+    });
   }
 }
